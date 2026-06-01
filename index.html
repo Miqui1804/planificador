@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///C:/Users/clema/Downloads/Planificador_Semanal.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificador Semanal · 7 Hábitos</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+:root{
+  --cream:#faf7f2;--warm:#fff9f3;--stone:#e8e0d4;--taupe:#c4b8a8;
+  --brown:#8b6f5c;--deep:#3d2c24;--accent:#c0392b;--teal:#2c6e6a;
+  --gold:#c9973a;--gold-soft:#f0d9a8;
+  --slot-h:52px;
+  --time-col:54px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Lato',sans-serif;background:var(--cream);color:var(--deep);min-height:100vh;}
+
+header{background:var(--deep);color:var(--cream);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:200;}
+header h1{font-family:'Playfair Display',serif;font-size:1.2rem;}
+header h1 span{color:var(--gold);}
+.week-nav{display:flex;align-items:center;gap:8px;}
+.week-nav button{background:var(--brown);color:var(--cream);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:.95rem;transition:background .18s;}
+.week-nav button:hover{background:var(--gold);color:var(--deep);}
+#week-label{font-family:'Playfair Display',serif;font-size:.88rem;min-width:190px;text-align:center;color:var(--gold-soft);}
+.hbtns{display:flex;gap:6px;}
+.btn-today{background:var(--teal);border:none;padding:6px 13px;border-radius:20px;font-family:'Lato',sans-serif;font-weight:700;cursor:pointer;color:#fff;font-size:.76rem;}
+.btn-save{background:var(--gold);border:none;padding:6px 13px;border-radius:20px;font-family:'Lato',sans-serif;font-weight:700;cursor:pointer;color:var(--deep);font-size:.76rem;}
+.btn-export{background:#4a7c59;border:none;padding:6px 13px;border-radius:20px;font-family:'Lato',sans-serif;font-weight:700;cursor:pointer;color:#fff;font-size:.76rem;}
+.btn-import{background:#5a6e8c;padding:6px 13px;border-radius:20px;font-family:'Lato',sans-serif;font-weight:700;cursor:pointer;color:#fff;font-size:.76rem;display:inline-flex;align-items:center;border:none;}
+.save-bar{background:var(--teal);color:#fff;text-align:center;padding:5px;font-size:.76rem;display:none;}
+.save-bar.show{display:block;}
+
+main{display:grid;grid-template-columns:250px 1fr;max-width:1600px;margin:0 auto;}
+
+aside{background:var(--warm);border-right:2px solid var(--stone);padding:15px 12px;min-height:calc(100vh - 54px);overflow-y:auto;}
+aside h2{font-family:'Playfair Display',serif;font-size:.76rem;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;padding-bottom:4px;border-bottom:1px solid var(--stone);}
+.hbadge{display:inline-block;background:var(--accent);color:#fff;font-size:.58rem;padding:2px 7px;border-radius:10px;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;}
+.role-card{background:var(--cream);border:1px solid var(--stone);border-radius:7px;margin-bottom:7px;overflow:hidden;}
+.role-hdr{display:flex;align-items:center;gap:6px;padding:6px 9px;cursor:pointer;user-select:none;background:var(--stone);transition:background .18s;}
+.role-hdr:hover{background:var(--taupe);}
+.role-num{background:var(--deep);color:var(--cream);width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.63rem;font-weight:700;flex-shrink:0;}
+.role-name-inp{font-weight:700;font-size:.78rem;flex:1;outline:none;background:transparent;border:none;color:var(--deep);font-family:'Lato',sans-serif;}
+.role-del-btn{background:none;border:none;color:var(--taupe);cursor:pointer;font-size:.9rem;padding:0 2px;line-height:1;}
+.role-del-btn:hover{color:var(--accent);}
+.role-body{padding:7px 9px;display:none;}
+.role-body.open{display:block;}
+.roca-row{display:flex;align-items:center;gap:3px;margin-bottom:3px;}
+.roca-inp{flex:1;background:transparent;border:none;border-bottom:1px dashed var(--taupe);padding:3px 0;font-size:.75rem;color:var(--deep);font-family:'Lato',sans-serif;outline:none;}
+.roca-inp::placeholder{color:var(--taupe);font-style:italic;}
+.roca-del-btn{background:none;border:none;color:var(--taupe);cursor:pointer;font-size:.76rem;line-height:1;}
+.roca-del-btn:hover{color:var(--accent);}
+.add-roca-btn{font-size:.65rem;color:var(--teal);background:none;border:none;cursor:pointer;padding:2px 0;margin-top:2px;}
+.add-role-btn{width:100%;background:none;border:2px dashed var(--taupe);border-radius:7px;padding:6px;font-size:.75rem;color:var(--brown);cursor:pointer;margin-top:4px;font-family:'Lato',sans-serif;transition:border-color .18s,color .18s;}
+.add-role-btn:hover{border-color:var(--accent);color:var(--accent);}
+.renewal-sec{margin-top:16px;padding-top:12px;border-top:1px solid var(--stone);}
+.renewal-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:6px;}
+.renewal-item{background:var(--gold-soft);border-radius:5px;padding:5px 6px;}
+.renewal-item label{font-weight:700;display:block;font-size:.58rem;text-transform:uppercase;color:var(--brown);margin-bottom:2px;}
+.renewal-item input{width:100%;background:transparent;border:none;border-bottom:1px dashed var(--taupe);font-size:.7rem;outline:none;color:var(--deep);font-family:'Lato',sans-serif;}
+
+.cal-sec{padding:12px;overflow-x:auto;}
+.cal-toolbar{display:flex;gap:7px;margin-bottom:10px;flex-wrap:wrap;align-items:center;}
+.cal-tab{padding:4px 12px;border:1px solid var(--stone);border-radius:20px;font-size:.73rem;cursor:pointer;background:var(--warm);transition:all .18s;font-family:'Lato',sans-serif;}
+.cal-tab.active,.cal-tab:hover{background:var(--deep);color:var(--cream);border-color:var(--deep);}
+.drag-hint{font-size:.65rem;color:var(--taupe);margin-left:auto;font-style:italic;}
+
+.cal-wrap{min-width:700px;border:1px solid var(--stone);border-radius:9px;overflow:hidden;box-shadow:0 2px 12px rgba(61,44,36,.08);background:#fff;}
+.cal-header-row{display:grid;background:var(--deep);}
+.cal-corner{background:var(--deep);}
+.day-hdr{background:var(--deep);color:var(--cream);text-align:center;padding:8px 4px;border-right:1px solid rgba(255,255,255,.1);}
+.day-hdr .dn{font-family:'Playfair Display',serif;font-size:.8rem;}
+.day-hdr .dd{font-size:.6rem;opacity:.7;margin-top:1px;}
+.day-hdr.wknd{background:var(--brown);}
+.day-hdr.today-col{background:var(--accent);}
+
+.time-gutter{width:var(--time-col);flex-shrink:0;border-right:1px solid var(--stone);background:var(--warm);}
+.time-tick{height:var(--slot-h);display:flex;align-items:flex-start;justify-content:flex-end;padding:3px 6px 0 0;font-size:.6rem;color:var(--taupe);user-select:none;border-bottom:1px solid var(--stone);}
+
+.day-col{position:relative;border-right:1px solid var(--stone);}
+.day-col.wknd-col{background:#fdf8f6;}
+.day-col.today-col-bg{background:#fff5f4;}
+
+.hour-line{position:absolute;left:0;right:0;border-top:1px solid var(--stone);pointer-events:none;}
+.hour-line.half{border-top:1px dashed #f0ebe4;}
+.hour-zone{position:absolute;left:0;right:0;height:var(--slot-h);cursor:pointer;transition:background .12s;z-index:1;}
+.hour-zone:hover{background:rgba(44,110,106,.06);}
+.hour-zone.drag-over{background:rgba(44,110,106,.18)!important;outline:2px dashed var(--teal);outline-offset:-2px;}
+
+.event{position:absolute;left:2px;right:2px;border-radius:5px;padding:3px 6px 3px 8px;font-size:.68rem;cursor:grab;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .12s,opacity .12s;z-index:10;min-height:20px;}
+.event:active{cursor:grabbing;}
+.event.dragging{opacity:.3;box-shadow:0 6px 20px rgba(0,0,0,.25);z-index:50;}
+.ev-top{display:flex;align-items:flex-start;justify-content:space-between;gap:3px;}
+.ev-title{font-weight:700;flex:1;overflow:hidden;pointer-events:none;white-space:nowrap;text-overflow:ellipsis;}
+.ev-actions{display:flex;gap:1px;opacity:0;transition:opacity .15s;flex-shrink:0;}
+.event:hover .ev-actions{opacity:1;}
+.ev-btn{background:none;border:none;cursor:pointer;font-size:.72rem;padding:0 2px;line-height:1;color:inherit;opacity:.8;}
+.ev-btn:hover{opacity:1;}
+.ev-time-lbl{font-size:.6rem;opacity:.75;pointer-events:none;margin-top:2px;}
+
+.role-familia{background:#d4edda;color:#155724;border-left:3px solid #28a745;}
+.role-banca{background:#cce5ff;color:#004085;border-left:3px solid #007bff;}
+.role-hipotecas{background:#e2d9f3;color:#4a0e8f;border-left:3px solid #6f42c1;}
+.role-personal{background:#fff3cd;color:#856404;border-left:3px solid #ffc107;}
+.role-social{background:#f8d7da;color:#721c24;border-left:3px solid #dc3545;}
+.role-especialidad{background:#d1ecf1;color:#0c5460;border-left:3px solid #17a2b8;}
+
+.tareas-row{display:flex;border-top:2px solid var(--gold);background:var(--gold-soft);}
+.tareas-lbl{width:var(--time-col);padding:8px 6px 0 0;text-align:right;font-size:.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--brown);font-weight:700;border-right:1px solid var(--stone);flex-shrink:0;}
+.tareas-cells{display:grid;flex:1;}
+.tar-cell{border-right:1px solid var(--taupe);padding:4px;}
+.tar-cell textarea{width:100%;height:56px;border:1px solid var(--taupe);border-radius:4px;padding:4px 5px;font-size:.68rem;font-family:'Lato',sans-serif;background:#fff;resize:none;color:var(--deep);outline:none;}
+.tar-cell textarea:focus{border-color:var(--teal);}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(61,44,36,.55);z-index:500;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--warm);border-radius:11px;padding:20px;width:330px;max-width:95vw;box-shadow:0 8px 40px rgba(0,0,0,.24);}
+.modal h3{font-family:'Playfair Display',serif;margin-bottom:13px;color:var(--deep);}
+.modal label{font-size:.72rem;font-weight:700;display:block;margin-bottom:2px;color:var(--brown);}
+.modal input,.modal select,.modal textarea{width:100%;border:1px solid var(--stone);border-radius:6px;padding:7px 9px;font-size:.78rem;font-family:'Lato',sans-serif;margin-bottom:10px;outline:none;background:#fff;color:var(--deep);}
+.modal input:focus,.modal select:focus,.modal textarea:focus{border-color:var(--teal);}
+.time-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.modal-btns{display:flex;gap:7px;justify-content:flex-end;margin-top:4px;}
+.btn-cancel{background:var(--stone);border:none;border-radius:6px;padding:7px 13px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.76rem;}
+.btn-save-ev{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 13px;cursor:pointer;font-family:'Lato',sans-serif;font-weight:700;font-size:.76rem;}
+.btn-del-ev{background:var(--taupe);color:var(--deep);border:none;border-radius:6px;padding:7px 13px;cursor:pointer;font-family:'Lato',sans-serif;font-size:.76rem;margin-right:auto;}
+
+@media(max-width:900px){main{grid-template-columns:1fr;}aside{min-height:auto;border-right:none;border-bottom:2px solid var(--stone);}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div style="font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:#c4b8a8;margin-bottom:2px;">Hábito 3 · Poner Primero lo Primero</div>
+    <h1>Planificador <span>Semanal</span></h1>
+  </div>
+  <div class="week-nav">
+    <button onclick="changeWeek(-1)">‹</button>
+    <div id="week-label">25 may – 31 may · 2026</div>
+    <button onclick="changeWeek(1)">›</button>
+  </div>
+  <div class="hbtns">
+    <button class="btn-today" onclick="goToday()">Hoy</button>
+    <button class="btn-export" onclick="exportData()">⬇️ Exportar</button>
+    <label class="btn-import">⬆️ Importar<input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(this)"></label>
+    <button class="btn-save" onclick="saveData()">💾 Guardar</button>
+  </div>
+</header>
+<div class="save-bar" id="save-bar">✓ Guardado</div>
+
+<main>
+<aside>
+  <div class="hbadge">Hábito 3</div>
+  <h2>Roles &amp; Grandes Rocas</h2>
+  <div id="roles-container">
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(0)">
+        <div class="role-num">1</div>
+        <input class="role-name-inp" value="Afilar la Sierra" onchange="roles[0].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(0)">×</button>
+      </div>
+      <div class="role-body" id="rb-0">
+        
+          <div class="roca-row">
+            <input class="roca-inp" value="Revisión vencimientos" placeholder="Gran Roca..." onchange="roles[0].rocas[0]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(0,0)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Formación" placeholder="Gran Roca..." onchange="roles[0].rocas[1]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(0,1)">×</button>
+          </div>
+        <button class="add-roca-btn" onclick="addRoca(0)">+ Gran Roca</button>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(1)">
+        <div class="role-num">2</div>
+        <input class="role-name-inp" value="Banca Privada" onchange="roles[1].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(1)">×</button>
+      </div>
+      <div class="role-body" id="rb-1">
+        
+          <div class="roca-row">
+            <input class="roca-inp" value="Revisión vencimientos" placeholder="Gran Roca..." onchange="roles[1].rocas[0]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(1,0)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Formación" placeholder="Gran Roca..." onchange="roles[1].rocas[1]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(1,1)">×</button>
+          </div>
+        <button class="add-roca-btn" onclick="addRoca(1)">+ Gran Roca</button>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(2)">
+        <div class="role-num">3</div>
+        <input class="role-name-inp" value="Hipotecas" onchange="roles[2].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(2)">×</button>
+      </div>
+      <div class="role-body" id="rb-2">
+        
+          <div class="roca-row">
+            <input class="roca-inp" value="Listado open pies" placeholder="Gran Roca..." onchange="roles[2].rocas[0]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(2,0)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Dinamizar" placeholder="Gran Roca..." onchange="roles[2].rocas[1]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(2,1)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Cerrar vinculación" placeholder="Gran Roca..." onchange="roles[2].rocas[2]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(2,2)">×</button>
+          </div>
+        <button class="add-roca-btn" onclick="addRoca(2)">+ Gran Roca</button>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(3)">
+        <div class="role-num">4</div>
+        <input class="role-name-inp" value="Padre de Familia" onchange="roles[3].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(3)">×</button>
+      </div>
+      <div class="role-body" id="rb-3">
+        
+          <div class="roca-row">
+            <input class="roca-inp" value="Focaccia con familia" placeholder="Gran Roca..." onchange="roles[3].rocas[0]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(3,0)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Parque Gulliver" placeholder="Gran Roca..." onchange="roles[3].rocas[1]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(3,1)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Pic-nic" placeholder="Gran Roca..." onchange="roles[3].rocas[2]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(3,2)">×</button>
+          </div>
+        <button class="add-roca-btn" onclick="addRoca(3)">+ Gran Roca</button>
+      </div>
+    </div>
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(4)">
+        <div class="role-num">5</div>
+        <input class="role-name-inp" value="Especialidad" onchange="roles[4].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(4)">×</button>
+      </div>
+      <div class="role-body" id="rb-4">
+        
+          <div class="roca-row">
+            <input class="roca-inp" value="Reunión Deport 60" placeholder="Gran Roca..." onchange="roles[4].rocas[0]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(4,0)">×</button>
+          </div>
+          <div class="roca-row">
+            <input class="roca-inp" value="Asociaciones" placeholder="Gran Roca..." onchange="roles[4].rocas[1]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(4,1)">×</button>
+          </div>
+        <button class="add-roca-btn" onclick="addRoca(4)">+ Gran Roca</button>
+      </div>
+    </div></div>
+  <button class="add-role-btn" onclick="addRole()">+ Añadir rol</button>
+  <div class="renewal-sec">
+    <div class="hbadge" style="background:var(--teal)">Hábito 7</div>
+    <h2 style="color:var(--teal)">Afilar la Sierra</h2>
+    <div class="renewal-grid">
+      <div class="renewal-item"><label>🏃 Cuerpo</label><input id="r-cuerpo" placeholder="correr 30min"></div>
+      <div class="renewal-item"><label>📚 Mente</label><input id="r-mente" placeholder="leer 20 pág"></div>
+      <div class="renewal-item"><label>❤️ Corazón</label><input id="r-corazon" placeholder="llamar a mamá"></div>
+      <div class="renewal-item"><label>✨ Espíritu</label><input id="r-espiritu" placeholder="meditar"></div>
+    </div>
+  </div>
+</aside>
+
+<div class="cal-sec">
+  <div class="cal-toolbar">
+    <div class="cal-tab active" onclick="setView(&#39;week&#39;,this)">Semana completa</div>
+    <div class="cal-tab" onclick="setView(&#39;laboral&#39;,this)">L–V</div>
+    <span class="drag-hint">✦ Arrastra para mover · Clic en hueco para añadir · ✎ editar · ✕ eliminar</span>
+  </div>
+  <div id="cal-wrap" class="cal-wrap"><div class="cal-header-row" style="grid-template-columns: var(--time-col) repeat(7,1fr);"><div class="cal-corner"></div><div class="day-hdr "><div class="dn">Lun</div><div class="dd">25/5</div></div><div class="day-hdr "><div class="dn">Mar</div><div class="dd">26/5</div></div><div class="day-hdr "><div class="dn">Mié</div><div class="dd">27/5</div></div><div class="day-hdr "><div class="dn">Jue</div><div class="dd">28/5</div></div><div class="day-hdr "><div class="dn">Vie</div><div class="dd">29/5</div></div><div class="day-hdr wknd"><div class="dn">Sáb</div><div class="dd">30/5</div></div><div class="day-hdr today-col"><div class="dn">Dom</div><div class="dd">31/5</div></div></div><div style="display: flex;"><div class="time-gutter"><div class="time-tick">7:00</div><div class="time-tick">8:00</div><div class="time-tick">9:00</div><div class="time-tick">10:00</div><div class="time-tick">11:00</div><div class="time-tick">12:00</div><div class="time-tick">13:00</div><div class="time-tick">14:00</div><div class="time-tick">15:00</div><div class="time-tick">16:00</div><div class="time-tick">17:00</div><div class="time-tick">18:00</div><div class="time-tick">19:00</div><div class="time-tick">20:00</div><div class="time-tick">21:00</div><div class="time-tick">22:00</div><div class="time-tick">23:00</div></div><div style="display: grid; grid-template-columns: repeat(7, 1fr); flex: 1 1 0%;"><div class="day-col  " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-personal" draggable="true" style="top: 104px; height: 310px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Programa Los 7 Hábitos</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">09:00–15:00</span></div><div class="event role-banca" draggable="true" style="top: 468px; height: 50px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Pepi Bañuls</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">16:00–17:00</span></div></div><div class="day-col  " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-banca" draggable="true" style="top: 104px; height: 50px; left: calc(0% + 2px); width: calc(50% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Teams BP</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">09:00–10:00</span></div><div class="event role-banca" draggable="true" style="top: 130px; height: 50px; left: calc(50% + 2px); width: calc(50% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Efrén</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">09:30–10:30</span></div><div class="event role-hipotecas" draggable="true" style="top: 208px; height: 50px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Eduardo IPF</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">11:00–12:00</span></div></div><div class="day-col  " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-personal" draggable="true" style="top: 104px; height: 310px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Programa Los 7 Hábitos</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">09:00–15:00</span></div><div class="event role-familia" draggable="true" style="top: 520px; height: 154px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">🏠 Visita a los abuelos</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">17:00–20:00</span></div></div><div class="day-col  " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-banca" draggable="true" style="top: 520px; height: 102px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Taller Banca Personal</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">17:00–19:00</span></div><div class="event role-familia" draggable="true" style="top: 624px; height: 102px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">🍕 Masa &amp; Focaccia</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">19:00–21:00</span></div></div><div class="day-col  " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-hipotecas" draggable="true" style="top: 208px; height: 50px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Carmelo Gamon</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">11:00–12:00</span></div><div class="event role-hipotecas" draggable="true" style="top: 260px; height: 50px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Rocío Hortelano</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">12:00–13:00</span></div><div class="event role-banca" draggable="true" style="top: 416px; height: 50px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">Eva Orive</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">15:00–16:00</span></div></div><div class="day-col wknd-col " style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-familia" draggable="true" style="top: 208px; height: 154px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">🎠 Parque Gulliver</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">11:00–14:00</span></div></div><div class="day-col wknd-col today-col-bg" style="height: 884px;"><div class="hour-line" style="top: 0px;"></div><div class="hour-line half" style="top: 26px;"></div><div class="hour-zone" style="top: 0px;"></div><div class="hour-line" style="top: 52px;"></div><div class="hour-line half" style="top: 78px;"></div><div class="hour-zone" style="top: 52px;"></div><div class="hour-line" style="top: 104px;"></div><div class="hour-line half" style="top: 130px;"></div><div class="hour-zone" style="top: 104px;"></div><div class="hour-line" style="top: 156px;"></div><div class="hour-line half" style="top: 182px;"></div><div class="hour-zone" style="top: 156px;"></div><div class="hour-line" style="top: 208px;"></div><div class="hour-line half" style="top: 234px;"></div><div class="hour-zone" style="top: 208px;"></div><div class="hour-line" style="top: 260px;"></div><div class="hour-line half" style="top: 286px;"></div><div class="hour-zone" style="top: 260px;"></div><div class="hour-line" style="top: 312px;"></div><div class="hour-line half" style="top: 338px;"></div><div class="hour-zone" style="top: 312px;"></div><div class="hour-line" style="top: 364px;"></div><div class="hour-line half" style="top: 390px;"></div><div class="hour-zone" style="top: 364px;"></div><div class="hour-line" style="top: 416px;"></div><div class="hour-line half" style="top: 442px;"></div><div class="hour-zone" style="top: 416px;"></div><div class="hour-line" style="top: 468px;"></div><div class="hour-line half" style="top: 494px;"></div><div class="hour-zone" style="top: 468px;"></div><div class="hour-line" style="top: 520px;"></div><div class="hour-line half" style="top: 546px;"></div><div class="hour-zone" style="top: 520px;"></div><div class="hour-line" style="top: 572px;"></div><div class="hour-line half" style="top: 598px;"></div><div class="hour-zone" style="top: 572px;"></div><div class="hour-line" style="top: 624px;"></div><div class="hour-line half" style="top: 650px;"></div><div class="hour-zone" style="top: 624px;"></div><div class="hour-line" style="top: 676px;"></div><div class="hour-line half" style="top: 702px;"></div><div class="hour-zone" style="top: 676px;"></div><div class="hour-line" style="top: 728px;"></div><div class="hour-line half" style="top: 754px;"></div><div class="hour-zone" style="top: 728px;"></div><div class="hour-line" style="top: 780px;"></div><div class="hour-line half" style="top: 806px;"></div><div class="hour-zone" style="top: 780px;"></div><div class="hour-line" style="top: 832px;"></div><div class="hour-line half" style="top: 858px;"></div><div class="hour-zone" style="top: 832px;"></div><div class="event role-social" draggable="true" style="top: 260px; height: 154px; left: calc(0% + 2px); width: calc(100% - 4px);">
+    <div class="ev-top">
+      <span class="ev-title">🧺 Pic-nic con amigos</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    <span class="ev-time-lbl">12:00–15:00</span></div></div></div></div><div class="tareas-row"><div class="tareas-lbl">Tareas</div><div class="tareas-cells" style="grid-template-columns: repeat(7, 1fr);"><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div><div class="tar-cell"><textarea placeholder="Tareas del día..."></textarea></div></div></div></div>
+</div>
+</main>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3 id="modal-title">Nuevo evento</h3>
+    <label>Título</label>
+    <input id="ev-title" placeholder="¿Qué vas a hacer?">
+    <label>Rol relacionado</label>
+    <select id="ev-role">
+      <option value="role-familia">Padre/Familia</option>
+      <option value="role-banca">Banca Privada</option>
+      <option value="role-hipotecas">Hipotecas</option>
+      <option value="role-personal">Personal</option>
+      <option value="role-social">Social</option>
+      <option value="role-especialidad">Especialidad</option>
+    </select>
+    <div class="time-row">
+      <div><label>Hora inicio</label><input type="time" id="ev-ts" value="09:00"></div>
+      <div><label>Hora fin</label><input type="time" id="ev-te" value="10:00"></div>
+    </div>
+    <label>Notas (opcional)</label>
+    <textarea id="ev-notes" rows="2" placeholder="Detalles..."></textarea>
+    <div class="modal-btns">
+      <button class="btn-del-ev" id="btn-delete" style="display:none" onclick="deleteEvent()">🗑 Eliminar</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-save-ev" onclick="saveEvent()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  CONFIG
+// ════════════════════════════════════════════
+const STORE        = '7habitos_v5';
+const SEEDED_KEY   = '7habitos_seeded_v5';
+const SLOT_H       = 52;   // px per hour
+const HOUR_START   = 7;
+const HOUR_END     = 24;   // last row = 23:00-00:00
+const TOTAL_HOURS  = HOUR_END - HOUR_START;
+const DNAMES       = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+
+// ════════════════════════════════════════════
+//  STATE  (all IDs are strings)
+// ════════════════════════════════════════════
+let currentOffset = 0;
+let currentView   = 'week';
+let events        = {};   // key: "YYYY-MM-DD" → array of event objects
+let roles         = [];
+let editingId     = null; // string id of event being edited
+let editingDk     = null; // dayKey of that event
+let modalDk       = null; // dayKey for new-event modal
+let dragState     = null; // { id, fromDk }
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+const ge  = id => document.getElementById(id);
+const S   = n  => String(n).padStart(2,'0');
+const uid = () => `ev_${Date.now()}_${Math.floor(Math.random()*99999)}`;
+const t2m = t  => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+const m2t = m  => `${S(Math.floor(m/60)%24)}:${S(m%60)}`;
+const dStr= d  => `${d.getFullYear()}-${S(d.getMonth()+1)}-${S(d.getDate())}`;
+
+function getMonday(offset) {
+  const t = new Date(); const day = t.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const m = new Date(t); m.setDate(t.getDate() + diff + offset*7); m.setHours(0,0,0,0);
+  return m;
+}
+function weekOffsetOf(date) {
+  const m = getMonday(0); const d = new Date(date); d.setHours(0,0,0,0);
+  const day = d.getDay(); const diff = day===0 ? -6 : 1-day;
+  const dm = new Date(d); dm.setDate(d.getDate()+diff);
+  return Math.round((dm-m)/(7*864e5));
+}
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+function changeWeek(d) { currentOffset += d; renderCal(); }
+function goToday()     { currentOffset = 0;  renderCal(); }
+function setView(v, el) {
+  currentView = v;
+  document.querySelectorAll('.cal-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderCal();
+}
+
+// ════════════════════════════════════════════
+//  PERSISTENCE
+// ════════════════════════════════════════════
+function saveData() {
+  localStorage.setItem(STORE, JSON.stringify({
+    events, roles,
+    renewal: {
+      cuerpo:   ge('r-cuerpo').value,
+      mente:    ge('r-mente').value,
+      corazon:  ge('r-corazon').value,
+      espiritu: ge('r-espiritu').value,
+    }
+  }));
+  const b = ge('save-bar'); b.classList.add('show');
+  setTimeout(() => b.classList.remove('show'), 2000);
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORE);
+    if (!raw) return false;
+    const d = JSON.parse(raw);
+    events = d.events || {};
+    roles  = d.roles  || defaultRoles();
+    if (d.renewal) {
+      ge('r-cuerpo').value   = d.renewal.cuerpo   || '';
+      ge('r-mente').value    = d.renewal.mente     || '';
+      ge('r-corazon').value  = d.renewal.corazon   || '';
+      ge('r-espiritu').value = d.renewal.espiritu  || '';
+    }
+    return true;
+  } catch(e) { return false; }
+}
+
+// ════════════════════════════════════════════
+//  DEFAULT DATA  (seed once)
+// ════════════════════════════════════════════
+function defaultRoles() {
+  return [
+    { name:'Afilar la Sierra', rocas:['Revisión vencimientos','Formación'] },
+    { name:'Banca Privada',    rocas:['Revisión vencimientos','Formación'] },
+    { name:'Hipotecas',        rocas:['Listado open pies','Dinamizar','Cerrar vinculación'] },
+    { name:'Padre de Familia', rocas:['Focaccia con familia','Parque Gulliver','Pic-nic'] },
+    { name:'Especialidad',     rocas:['Reunión Deport 60','Asociaciones'] },
+  ];
+}
+
+function seedWeek() {
+  if (currentOffset !== weekOffsetOf(new Date())) return;
+  if (localStorage.getItem(SEEDED_KEY)) return;
+  localStorage.setItem(SEEDED_KEY, '1');
+
+  const base = getMonday(currentOffset);
+  const add = (dOff, title, role, ts, te, notes='') => {
+    const dt = new Date(base); dt.setDate(base.getDate() + dOff);
+    const k  = dStr(dt);
+    if (!events[k]) events[k] = [];
+    events[k].push({ id:uid(), title, role, timeStart:ts, timeEnd:te, notes });
+  };
+
+  add(0, 'Programa Los 7 Hábitos',      'role-personal',    '09:00','15:00','Curso FranklinCovey');
+  add(0, 'Pepi Bañuls',                 'role-banca',       '16:00','17:00','');
+  add(1, 'Teams BP',                    'role-banca',       '09:00','10:00','');
+  add(1, 'Efrén',                       'role-banca',       '09:30','10:30','');
+  add(1, 'Eduardo IPF',                 'role-hipotecas',   '11:00','12:00','');
+  add(2, 'Programa Los 7 Hábitos',      'role-personal',    '09:00','15:00','Curso FranklinCovey');
+  add(2, '🏠 Visita a los abuelos',     'role-familia',     '17:00','20:00','Con mi hija');
+  add(3, 'Taller Banca Personal',       'role-banca',       '17:00','19:00','Fiscalidad Ahorro');
+  add(3, '🍕 Masa & Focaccia',          'role-familia',     '19:00','21:00','Con mi hija');
+  add(4, 'Carmelo Gamon',               'role-hipotecas',   '11:00','12:00','');
+  add(4, 'Rocío Hortelano',             'role-hipotecas',   '12:00','13:00','');
+  add(4, 'Eva Orive',                   'role-banca',       '15:00','16:00','Reunión');
+  add(5, '🎠 Parque Gulliver',          'role-familia',     '11:00','14:00','Con hijos de amigos');
+  add(6, '🧺 Pic-nic con amigos',       'role-social',      '12:00','15:00','Con amigos');
+}
+
+// ════════════════════════════════════════════
+//  EVENT LAYOUT  (overlap columns)
+// ════════════════════════════════════════════
+function layoutEvents(evs) {
+  // returns { [ev.id]: { col, totalCols } }
+  const result = {};
+  const sorted = [...evs].sort((a,b) => t2m(a.timeStart) - t2m(b.timeStart));
+  const groups = [];
+
+  sorted.forEach(ev => {
+    const s = t2m(ev.timeStart), e = t2m(ev.timeEnd);
+    let placed = false;
+    for (const g of groups) {
+      if (g.some(ge => t2m(ge.timeStart) < e && t2m(ge.timeEnd) > s)) {
+        g.push(ev); placed = true; break;
+      }
+    }
+    if (!placed) groups.push([ev]);
+  });
+
+  groups.forEach(g => {
+    const colEnds = [];
+    g.forEach(ev => {
+      const s = t2m(ev.timeStart), e = t2m(ev.timeEnd);
+      let c = colEnds.findIndex(end => end <= s);
+      if (c === -1) c = colEnds.length;
+      colEnds[c] = e;
+      result[ev.id] = { col:c, totalCols:0 };
+    });
+    const tc = colEnds.length;
+    g.forEach(ev => { result[ev.id].totalCols = tc; });
+  });
+  return result;
+}
+
+// ════════════════════════════════════════════
+//  RENDER CALENDAR
+// ════════════════════════════════════════════
+function renderCal() {
+  const mon  = getMonday(currentOffset);
+  const days = currentView === 'week' ? 7 : 5;
+  const sun  = new Date(mon); sun.setDate(mon.getDate()+6);
+  const fmt  = d => d.toLocaleDateString('es-ES',{day:'numeric',month:'short'});
+  ge('week-label').textContent = `${fmt(mon)} – ${fmt(sun)} · ${mon.getFullYear()}`;
+
+  seedWeek();
+
+  const wrap = ge('cal-wrap');
+  wrap.innerHTML = '';
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const totalPx = TOTAL_HOURS * SLOT_H;
+
+  // ── Header row ──────────────────────────
+  const hdrRow = document.createElement('div');
+  hdrRow.className = 'cal-header-row';
+  hdrRow.style.gridTemplateColumns = `var(--time-col) repeat(${days},1fr)`;
+  const corner = document.createElement('div'); corner.className='cal-corner';
+  hdrRow.appendChild(corner);
+  for (let d=0; d<days; d++) {
+    const dt = new Date(mon); dt.setDate(mon.getDate()+d);
+    const isT = dt.getTime()===today.getTime(); const isW = d>=5;
+    const h = document.createElement('div');
+    h.className = `day-hdr ${isT?'today-col':isW?'wknd':''}`;
+    h.innerHTML = `<div class="dn">${DNAMES[d]}</div><div class="dd">${dt.getDate()}/${dt.getMonth()+1}</div>`;
+    hdrRow.appendChild(h);
+  }
+  wrap.appendChild(hdrRow);
+
+  // ── Body ────────────────────────────────
+  const body = document.createElement('div');
+  body.style.cssText = 'display:flex;';
+  wrap.appendChild(body);
+
+  // Time gutter
+  const gutter = document.createElement('div');
+  gutter.className = 'time-gutter';
+  for (let h=HOUR_START; h<HOUR_END; h++) {
+    const tick = document.createElement('div');
+    tick.className = 'time-tick';
+    tick.textContent = h===24 ? '0:00' : `${h}:00`;
+    gutter.appendChild(tick);
+  }
+  body.appendChild(gutter);
+
+  // Day columns
+  const daysWrap = document.createElement('div');
+  daysWrap.style.cssText = `display:grid;grid-template-columns:repeat(${days},1fr);flex:1;`;
+  body.appendChild(daysWrap);
+
+  for (let d=0; d<days; d++) {
+    const dt = new Date(mon); dt.setDate(mon.getDate()+d);
+    const isT = dt.getTime()===today.getTime(); const isW = d>=5;
+    const dk = dStr(dt);
+
+    const col = document.createElement('div');
+    col.className = `day-col ${isW?'wknd-col':''} ${isT?'today-col-bg':''}`;
+    col.style.height = totalPx + 'px';
+
+    // Grid lines + click/drop zones
+    for (let h=HOUR_START; h<HOUR_END; h++) {
+      const top = (h - HOUR_START) * SLOT_H;
+
+      const line = document.createElement('div');
+      line.className = 'hour-line';
+      line.style.top = top + 'px';
+      col.appendChild(line);
+
+      const half = document.createElement('div');
+      half.className = 'hour-line half';
+      half.style.top = (top + SLOT_H/2) + 'px';
+      col.appendChild(half);
+
+      const zone = document.createElement('div');
+      zone.className = 'hour-zone';
+      zone.style.top = top + 'px';
+      zone.addEventListener('click',  () => openAddModal(dk, h));
+      zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault(); zone.classList.remove('drag-over');
+        if (dragState) moveEvent(dragState.id, dragState.fromDk, dk, h);
+      });
+      col.appendChild(zone);
+    }
+
+    // Place events with absolute positioning
+    const dayEvs = (events[dk] || []);
+    const layout = layoutEvents(dayEvs);
+    dayEvs.forEach(ev => col.appendChild(makeEvEl(ev, dk, layout[ev.id])));
+
+    daysWrap.appendChild(col);
+  }
+
+  // ── Tareas strip ───────────────────────
+  const tarRow = document.createElement('div');
+  tarRow.className = 'tareas-row';
+  const tarLbl = document.createElement('div');
+  tarLbl.className = 'tareas-lbl'; tarLbl.textContent = 'Tareas';
+  tarRow.appendChild(tarLbl);
+  const tarCells = document.createElement('div');
+  tarCells.className = 'tareas-cells';
+  tarCells.style.gridTemplateColumns = `repeat(${days},1fr)`;
+  for (let d=0; d<days; d++) {
+    const dt = new Date(mon); dt.setDate(mon.getDate()+d);
+    const tk = dStr(dt) + '_tareas';
+    const cell = document.createElement('div'); cell.className = 'tar-cell';
+    const ta = document.createElement('textarea');
+    ta.placeholder = 'Tareas del día...';
+    ta.value = (events[tk]||[{}])[0]?.title || '';
+    ta.addEventListener('input',  () => { events[tk] = [{title:ta.value}]; });
+    ta.addEventListener('change', saveData);
+    cell.appendChild(ta); tarCells.appendChild(cell);
+  }
+  tarRow.appendChild(tarCells);
+  wrap.appendChild(tarRow);
+}
+
+// ════════════════════════════════════════════
+//  BUILD EVENT ELEMENT
+// ════════════════════════════════════════════
+function makeEvEl(ev, dk, layout) {
+  const sMin    = t2m(ev.timeStart);
+  const eMin    = t2m(ev.timeEnd);
+  const topPx   = (sMin/60 - HOUR_START) * SLOT_H;
+  const heightPx= Math.max((eMin - sMin)/60 * SLOT_H - 2, 20);
+  const { col=0, totalCols=1 } = layout || {};
+  const pct     = 100 / totalCols;
+
+  const el = document.createElement('div');
+  el.className = `event ${ev.role}`;
+  el.style.cssText = `top:${topPx}px;height:${heightPx}px;left:calc(${col*pct}% + 2px);width:calc(${pct}% - 4px);`;
+  el.draggable = true;
+
+  el.innerHTML = `
+    <div class="ev-top">
+      <span class="ev-title">${ev.title}</span>
+      <span class="ev-actions">
+        <button class="ev-btn" title="Editar">✎</button>
+        <button class="ev-btn" title="Eliminar">✕</button>
+      </span>
+    </div>
+    ${heightPx >= 32 ? `<span class="ev-time-lbl">${ev.timeStart}–${ev.timeEnd}</span>` : ''}`;
+
+  // Use addEventListener (NOT onclick in HTML) so we can pass real references
+  el.querySelectorAll('.ev-btn')[0].addEventListener('click', e => {
+    e.stopPropagation(); openEditModal(dk, ev.id);
+  });
+  el.querySelectorAll('.ev-btn')[1].addEventListener('click', e => {
+    e.stopPropagation(); quickDel(dk, ev.id);
+  });
+  el.addEventListener('click',   e => e.stopPropagation());
+  el.addEventListener('dblclick',e => { e.stopPropagation(); openEditModal(dk, ev.id); });
+  el.addEventListener('dragstart', e => {
+    dragState = { id: ev.id, fromDk: dk };
+    setTimeout(() => el.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  el.addEventListener('dragend', () => {
+    el.classList.remove('dragging'); dragState = null;
+  });
+  return el;
+}
+
+// ════════════════════════════════════════════
+//  MOVE EVENT  (drag & drop)
+// ════════════════════════════════════════════
+function moveEvent(evId, fromDk, toDk, toHour) {
+  const list = events[fromDk] || [];
+  const idx  = list.findIndex(e => e.id === evId);
+  if (idx < 0) return;
+
+  const ev  = { ...list[idx] };
+  const dur = t2m(ev.timeEnd) - t2m(ev.timeStart);
+  const mins= parseInt(ev.timeStart.split(':')[1]);
+  const ns  = toHour*60 + mins;
+  ev.timeStart = m2t(ns);
+  ev.timeEnd   = m2t(ns + dur);
+
+  events[fromDk] = list.filter(e => e.id !== evId);
+  if (!events[toDk]) events[toDk] = [];
+  events[toDk].push(ev);
+
+  renderCal(); saveData();
+}
+
+// ════════════════════════════════════════════
+//  QUICK DELETE  (✕ button)
+// ════════════════════════════════════════════
+function quickDel(dk, evId) {
+  if (!confirm('¿Eliminar este evento?')) return;
+  events[dk] = (events[dk] || []).filter(e => e.id !== evId);
+  renderCal(); saveData();
+}
+
+// ════════════════════════════════════════════
+//  MODAL
+// ════════════════════════════════════════════
+function openAddModal(dk, h) {
+  modalDk = dk; editingId = null; editingDk = null;
+  ge('modal-title').textContent = 'Nuevo evento';
+  ge('ev-title').value = ''; ge('ev-notes').value = '';
+  ge('btn-delete').style.display = 'none';
+  ge('ev-ts').value = `${S(h)}:00`;
+  ge('ev-te').value = `${S((h+1) % 24)}:00`;
+  ge('modal').classList.add('open');
+  setTimeout(() => ge('ev-title').focus(), 60);
+}
+
+function openEditModal(dk, evId) {
+  const ev = (events[dk] || []).find(e => e.id === evId);
+  if (!ev) return;
+  modalDk = dk; editingId = evId; editingDk = dk;
+  ge('modal-title').textContent = 'Editar evento';
+  ge('ev-title').value = ev.title;
+  ge('ev-role').value  = ev.role;
+  ge('ev-ts').value    = ev.timeStart;
+  ge('ev-te').value    = ev.timeEnd;
+  ge('ev-notes').value = ev.notes || '';
+  ge('btn-delete').style.display = 'block';
+  ge('modal').classList.add('open');
+  setTimeout(() => ge('ev-title').focus(), 60);
+}
+
+function closeModal() {
+  ge('modal').classList.remove('open');
+  editingId = null; editingDk = null; modalDk = null;
+}
+
+function saveEvent() {
+  const title = ge('ev-title').value.trim(); if (!title) return;
+  const role  = ge('ev-role').value;
+  const ts    = ge('ev-ts').value;
+  const te    = ge('ev-te').value;
+  const notes = ge('ev-notes').value;
+
+  if (editingId !== null) {
+    // Remove old entry
+    events[editingDk] = (events[editingDk] || []).filter(e => e.id !== editingId);
+    // Push updated entry (may have moved to different hour — store under same dayKey)
+    if (!events[editingDk]) events[editingDk] = [];
+    events[editingDk].push({ id:editingId, title, role, timeStart:ts, timeEnd:te, notes });
+  } else {
+    if (!events[modalDk]) events[modalDk] = [];
+    events[modalDk].push({ id:uid(), title, role, timeStart:ts, timeEnd:te, notes });
+  }
+  closeModal(); renderCal(); saveData();
+}
+
+function deleteEvent() {
+  if (editingId === null || !editingDk) return;
+  if (!confirm(`¿Eliminar este evento?`)) return;
+  events[editingDk] = (events[editingDk] || []).filter(e => e.id !== editingId);
+  closeModal(); renderCal(); saveData();
+}
+
+ge('modal').addEventListener('click', function(e) { if (e.target===this) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeModal();
+  if (e.key==='Enter' && ge('modal').classList.contains('open') && e.target.tagName!=='TEXTAREA') {
+    e.preventDefault(); saveEvent();
+  }
+});
+
+// ════════════════════════════════════════════
+//  ROLES SIDEBAR
+// ════════════════════════════════════════════
+function renderRoles() {
+  ge('roles-container').innerHTML = roles.map((r,i) => `
+    <div class="role-card">
+      <div class="role-hdr" onclick="toggleRole(${i})">
+        <div class="role-num">${i+1}</div>
+        <input class="role-name-inp" value="${r.name.replace(/"/g,'&quot;')}"
+               onchange="roles[${i}].name=this.value" onclick="event.stopPropagation()">
+        <button class="role-del-btn" onclick="event.stopPropagation();delRole(${i})">×</button>
+      </div>
+      <div class="role-body" id="rb-${i}">
+        ${r.rocas.map((rc,j) => `
+          <div class="roca-row">
+            <input class="roca-inp" value="${rc.replace(/"/g,'&quot;')}"
+                   placeholder="Gran Roca..." onchange="roles[${i}].rocas[${j}]=this.value">
+            <button class="roca-del-btn" onclick="delRoca(${i},${j})">×</button>
+          </div>`).join('')}
+        <button class="add-roca-btn" onclick="addRoca(${i})">+ Gran Roca</button>
+      </div>
+    </div>`).join('');
+}
+function toggleRole(i) { ge(`rb-${i}`).classList.toggle('open'); }
+function addRoca(i)     { roles[i].rocas.push(''); renderRoles(); ge(`rb-${i}`).classList.add('open'); }
+function delRoca(i,j)   { roles[i].rocas.splice(j,1); renderRoles(); ge(`rb-${i}`).classList.add('open'); }
+function addRole()      { roles.push({name:'Nuevo Rol',rocas:['']}); renderRoles(); }
+function delRole(i)     { if(confirm('¿Eliminar este rol?')){ roles.splice(i,1); renderRoles(); } }
+
+// ════════════════════════════════════════════
+//  EXPORT / IMPORT
+// ════════════════════════════════════════════
+function exportData() {
+  const data = {
+    events, roles,
+    renewal: {
+      cuerpo:   ge('r-cuerpo').value,
+      mente:    ge('r-mente').value,
+      corazon:  ge('r-corazon').value,
+      espiritu: ge('r-espiritu').value,
+    },
+    exportedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const hoy  = new Date();
+  a.href     = url;
+  a.download = `planificador_${hoy.getFullYear()}-${S(hoy.getMonth()+1)}-${S(hoy.getDate())}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.events || !data.roles) { alert('Archivo no válido'); return; }
+      if (!confirm('¿Importar estos datos? Se reemplazarán los datos actuales.')) { input.value=''; return; }
+      events = data.events;
+      roles  = data.roles;
+      if (data.renewal) {
+        ge('r-cuerpo').value   = data.renewal.cuerpo   || '';
+        ge('r-mente').value    = data.renewal.mente     || '';
+        ge('r-corazon').value  = data.renewal.corazon   || '';
+        ge('r-espiritu').value = data.renewal.espiritu  || '';
+      }
+      localStorage.setItem(SEEDED_KEY, '1');
+      saveData();
+      renderRoles();
+      renderCal();
+      alert('✓ Datos importados correctamente');
+    } catch(err) { alert('Error al leer el archivo JSON'); }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+(function init() {
+  if (!loadData()) roles = defaultRoles();
+  renderRoles();
+  renderCal();
+})();
+</script>
+
+
+</body></html>
