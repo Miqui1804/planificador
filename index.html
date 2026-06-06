@@ -396,21 +396,39 @@ async function syncCloud() {
     const res = await fetch(`${syncConfig.url}?id=${syncConfig.sheetId}`);
     if(!res.ok) throw new Error('Error al leer');
     const text = await res.text();
-    const cloudData = text && text!=='{}' ? JSON.parse(text) : null;
+    const cloudData = (text && text!=='{}') ? JSON.parse(text) : null;
 
-    // 2. Merge: cloud wins (last-write-wins by savedAt timestamp)
-    const localData = getPayload();
-    const localTs = localData.savedAt || 0;
-    const cloudTs = cloudData?.savedAt || 0;
-
-    if(cloudData && cloudTs >= localTs) {
-      // cloud is newer — apply it
-      applyPayload(cloudData);
+    // 2. Merge: combine events from both local and cloud
+    //    For each day key, keep all unique events (by id) from both sources.
+    //    If same id exists in both, local wins (user just edited locally).
+    if(cloudData && cloudData.events) {
+      const localEvents = events;
+      const merged = { ...cloudData.events };
+      // overlay local events on top — local always wins per event id
+      for(const [dk, evList] of Object.entries(localEvents)) {
+        if(!merged[dk]) {
+          merged[dk] = evList;
+        } else {
+          const localIds = new Set(evList.map(e=>e.id));
+          // keep cloud events not present locally, add all local events
+          const cloudOnly = merged[dk].filter(e=>!localIds.has(e.id));
+          merged[dk] = [...cloudOnly, ...evList];
+        }
+      }
+      events = merged;
+      // also take roles and renewal from cloud only if local has defaults
+      if(cloudData.roles && roles.length <= 5) roles = cloudData.roles;
+      if(cloudData.renewal) {
+        if(!ge('r-cuerpo').value) ge('r-cuerpo').value = cloudData.renewal.cuerpo||'';
+        if(!ge('r-mente').value)  ge('r-mente').value  = cloudData.renewal.mente||'';
+        if(!ge('r-corazon').value) ge('r-corazon').value = cloudData.renewal.corazon||'';
+        if(!ge('r-espiritu').value) ge('r-espiritu').value = cloudData.renewal.espiritu||'';
+      }
       localStorage.setItem(SEEDED_KEY,'1');
       renderRoles(); renderCal();
     }
 
-    // 3. Push current state to cloud
+    // 3. Push merged state to cloud
     const payload = getPayload();
     payload.savedAt = Date.now();
     localStorage.setItem(STORE, JSON.stringify(payload));
